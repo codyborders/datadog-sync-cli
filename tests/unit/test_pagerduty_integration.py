@@ -210,16 +210,16 @@ class TestDeleteResource:
         )
 
 
-class TestGetDestinationServices:
-    """Tests for get_destination_services method."""
+class TestPrivateGetDestinationServices:
+    """Tests for _get_destination_services method."""
 
     @pytest.mark.asyncio
-    async def test_get_destination_services(self, pagerduty_resource, sample_service_list):
-        """Test get_destination_services returns dict keyed by service_name."""
+    async def test_private_get_destination_services(self, pagerduty_resource, sample_service_list):
+        """Test _get_destination_services returns dict keyed by service_name."""
         pagerduty_resource.config.destination_client = AsyncMock()
         pagerduty_resource.config.destination_client.get.return_value = {"services": sample_service_list}
 
-        result = await pagerduty_resource.get_destination_services()
+        result = await pagerduty_resource._get_destination_services()
 
         assert len(result) == 2
         assert "test-service" in result

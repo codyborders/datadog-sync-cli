@@ -151,8 +151,8 @@ class TestWebhooksIntegration:
         assert "test-webhook" in webhooks_integration.destination_webhooks
 
     @pytest.mark.asyncio
-    async def test_get_destination_webhooks_not_found(self, webhooks_integration, mock_config, sample_webhook):
-        """Test get_destination_webhooks handles 404 errors gracefully."""
+    async def test_private_get_destination_webhooks_not_found(self, webhooks_integration, mock_config, sample_webhook):
+        """Test _get_destination_webhooks handles 404 errors gracefully."""
         mock_config.state.destination = {"webhooks_integration": {"test-webhook": sample_webhook}}
         mock_config.state.source = {"webhooks_integration": {}}
 
@@ -161,14 +161,16 @@ class TestWebhooksIntegration:
         mock_error.status_code = 404
         mock_config.destination_client.get.side_effect = mock_error
 
-        result = await webhooks_integration.get_destination_webhooks()
+        result = await webhooks_integration._get_destination_webhooks()
 
         assert result == {}
         mock_config.logger.debug.assert_called()
 
     @pytest.mark.asyncio
-    async def test_get_destination_webhooks_other_error(self, webhooks_integration, mock_config, sample_webhook):
-        """Test get_destination_webhooks logs warnings for non-404 errors."""
+    async def test_private_get_destination_webhooks_other_error(
+        self, webhooks_integration, mock_config, sample_webhook
+    ):
+        """Test _get_destination_webhooks logs warnings for non-404 errors."""
         mock_config.state.destination = {"webhooks_integration": {"test-webhook": sample_webhook}}
         mock_config.state.source = {"webhooks_integration": {}}
 
@@ -177,7 +179,7 @@ class TestWebhooksIntegration:
         mock_error.status_code = 500
         mock_config.destination_client.get.side_effect = mock_error
 
-        result = await webhooks_integration.get_destination_webhooks()
+        result = await webhooks_integration._get_destination_webhooks()
 
         assert result == {}
         mock_config.logger.warning.assert_called()

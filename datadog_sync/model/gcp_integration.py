@@ -75,7 +75,7 @@ class GCPIntegration(BaseResource):
         Retrieves existing GCP accounts from the destination to enable
         matching by client_email for updates.
         """
-        self.destination_gcp_accounts = await self.get_destination_gcp_accounts()
+        self.destination_gcp_accounts = await self._get_destination_gcp_accounts()
 
     async def create_resource(self, _id: str, resource: Dict) -> Tuple[str, Dict]:
         """Create a new GCP account in the destination organization.
@@ -134,7 +134,7 @@ class GCPIntegration(BaseResource):
 
         await destination_client.delete(self.resource_config.base_path + f"/{dest_id}")
 
-    async def get_destination_gcp_accounts(self) -> Dict[str, Dict]:
+    async def _get_destination_gcp_accounts(self) -> Dict[str, Dict]:
         """Retrieve existing GCP accounts from the destination indexed by client_email.
 
         Returns:

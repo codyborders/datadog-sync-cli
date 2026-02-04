@@ -192,22 +192,22 @@ class TestGCPIntegrationPreApplyHook:
         assert gcp_integration.destination_gcp_accounts[client_email] == sample_gcp_account
 
 
-class TestGCPIntegrationGetDestinationGCPAccounts:
-    """Tests for get_destination_gcp_accounts method."""
+class TestGCPIntegrationPrivateGetDestinationGCPAccounts:
+    """Tests for _get_destination_gcp_accounts method."""
 
     @pytest.mark.asyncio
-    async def test_get_destination_gcp_accounts(self, gcp_integration, config, sample_gcp_account):
+    async def test_private_get_destination_gcp_accounts(self, gcp_integration, config, sample_gcp_account):
         """Test retrieving destination accounts indexed by client_email."""
         config.destination_client.get = AsyncMock(return_value={"data": [sample_gcp_account]})
 
-        result = await gcp_integration.get_destination_gcp_accounts()
+        result = await gcp_integration._get_destination_gcp_accounts()
 
         client_email = sample_gcp_account["attributes"]["client_email"]
         assert client_email in result
         assert result[client_email] == sample_gcp_account
 
     @pytest.mark.asyncio
-    async def test_get_destination_gcp_accounts_handles_missing_email(self, gcp_integration, config):
+    async def test_private_get_destination_gcp_accounts_handles_missing_email(self, gcp_integration, config):
         """Test handling accounts without client_email attribute."""
         account_without_email = {
             "id": "test-id",
@@ -216,6 +216,6 @@ class TestGCPIntegrationGetDestinationGCPAccounts:
         }
         config.destination_client.get = AsyncMock(return_value={"data": [account_without_email]})
 
-        result = await gcp_integration.get_destination_gcp_accounts()
+        result = await gcp_integration._get_destination_gcp_accounts()
 
         assert result == {}

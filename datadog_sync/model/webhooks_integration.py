@@ -92,7 +92,7 @@ class WebhooksIntegration(BaseResource):
 
         Fetches existing webhooks at the destination to enable matching by name.
         """
-        self.destination_webhooks = await self.get_destination_webhooks()
+        self.destination_webhooks = await self._get_destination_webhooks()
 
     async def create_resource(self, _id: str, resource: Dict) -> Tuple[str, Dict]:
         """Create a new webhook at the destination.
@@ -146,7 +146,7 @@ class WebhooksIntegration(BaseResource):
         webhook_name = self.config.state.destination[self.resource_type][_id]["name"]
         await destination_client.delete(self.resource_config.base_path + f"/{webhook_name}")
 
-    async def get_destination_webhooks(self) -> Dict[str, Dict]:
+    async def _get_destination_webhooks(self) -> Dict[str, Dict]:
         """Retrieve webhooks that exist at the destination.
 
         Since the API doesn't support listing, this method retrieves webhooks

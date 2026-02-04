@@ -78,7 +78,7 @@ class PagerDutyIntegration(BaseResource):
 
         Fetches and caches destination services for deduplication.
         """
-        self.destination_services = await self.get_destination_services()
+        self.destination_services = await self._get_destination_services()
 
     async def create_resource(self, _id: str, resource: Dict) -> Tuple[str, Dict]:
         """Create a new PagerDuty service object.
@@ -132,7 +132,7 @@ class PagerDutyIntegration(BaseResource):
         dest_service_name = self.config.state.destination[self.resource_type][_id]["service_name"]
         await destination_client.delete(self.resource_config.base_path + f"/{dest_service_name}")
 
-    async def get_destination_services(self) -> Dict[str, Dict]:
+    async def _get_destination_services(self) -> Dict[str, Dict]:
         """Fetch all PagerDuty services from the destination.
 
         Returns:
